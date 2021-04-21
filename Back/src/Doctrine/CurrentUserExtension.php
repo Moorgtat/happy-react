@@ -27,9 +27,9 @@ class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryIt
 
         $user = $this->security->getUser();
 
-        if ($resourceClass === Customer::class 
-            || $resourceClass === Invoice::class 
-            && !$this->auth->isGranted('ROLE_ADMIN') 
+        if (($resourceClass === Customer::class 
+            || $resourceClass === Invoice::class) 
+            && (!$this->auth->isGranted('ROLE_ADMIN')) 
             && $user instanceof User) {
             
             $rootAlias = $queryBuilder->getRootAliases()[0];
