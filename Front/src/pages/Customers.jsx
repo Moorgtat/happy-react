@@ -1,39 +1,52 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import Navbar from "../components/Navbar";
 import Pagination from "../components/Pagination";
+import CustomersAPI from "../services/CustomersAPI";
 
 const Customers = (props) => {
 
     const [customers, setCustomers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [search, setSearch] = useState("");
 
-    useEffect(() => {
-        axios.get("http://127.0.0.1:8000/api/customers")
-             .then(response => response.data['hydra:member'])
-             .then(data => setCustomers(data))
-             .catch(error => console.log(error.response));
-    }, []);
+    const fetchCustomers = async () => {
+        try {
+            const data = await CustomersAPI.findAll()
+            setCustomers(data);
+        } catch (error) {
+            console.log(error.response);
+        }
+    };
 
-    const handleDelete = (id) => { 
+    useEffect(() => {fetchCustomers()}, []);
+
+    const handleDelete = async (id) => { 
         const originalCustomers = [...customers];
         setCustomers(customers.filter(customer => customer.id !== id));
-        axios.delete("http://127.0.0.1:8000/api/customers/" + id)
-             .then(response => 
-                console.log('ok'))
-             .catch(error => {
-                 setCustomers(originalCustomers);
-                 console.log(error.response)
-                });
+        try {
+            await CustomersAPI.delete(id)
+        } catch (error) {
+            setCustomers(originalCustomers);
+            console.log(error.response)};
         };
 
 
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
+    const handlePageChange = (page) => setCurrentPage(page);
+
+    const handleSearch = (event) => {
+        const value = event.currentTarget.value;
+        setSearch(value);
+        setCurrentPage(1);
     };
 
+    const filteredCustomers = customers.filter(c => c.firstName.toLowerCase().includes(search.toLocaleLowerCase())
+                                                || c.lastName.toLowerCase().includes(search.toLocaleLowerCase())
+                                                || c.email.toLowerCase().includes(search.toLocaleLowerCase())
+                                                || c.company.toLowerCase().includes(search.toLocaleLowerCase()));
+
     const itemsPerPage = 10;
-    const paginatedCustomers = Pagination.getData(customers, currentPage, itemsPerPage);
+
+    const paginatedCustomers = Pagination.getData(filteredCustomers, currentPage, itemsPerPage);
 
     return ( 
         <div>
@@ -41,10 +54,13 @@ const Customers = (props) => {
             <h1 className="App-title">CUSTOMERS PAGE</h1>
             <p className="App-texte">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eum quas dolorem reprehenderit, quia ullam et quibusdam, maiores perspiciatis hic aut dolore atque earum ea doloremque? Explicabo unde eos eum consequuntur.</p>
         
+            <div className="form-group">
+                <input type="text" onChange={handleSearch} value={search} className="form-control" placeholder="Rechercher..." />
+            </div>
+
             <table className="table table-hover">
                 <thead>
                     <tr>
-                        <th>id</th>
                         <th>Client</th>
                         <th>Email</th>
                         <th>Entreprise</th>
@@ -58,7 +74,6 @@ const Customers = (props) => {
                     { paginatedCustomers.map(
                         customer =>
                                     <tr key={customer.id}>
-                                        <td>{customer.id}</td>
                                         <td>{customer.firstName} {customer.lastName}</td>
                                         <td>{customer.email}</td>
                                         <td>{customer.company}</td>
@@ -79,8 +94,10 @@ const Customers = (props) => {
                 </tbody>
             </table>
 
-            <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage} length={customers.length} 
-                    onPageChange={handlePageChange} />
+            {itemsPerPage < filteredCustomers.length && (
+                <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage} length={filteredCustomers.length} 
+                onPageChange={handlePageChange} />
+            )}
 
         </div>
      );

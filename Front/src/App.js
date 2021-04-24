@@ -7,7 +7,7 @@ import Customers from './pages/Customers';
 function App() {
 return (
     <Router>
-      <div>
+      <div className="container">
         <Switch>
           <Route exact path="/">
             <Home />
