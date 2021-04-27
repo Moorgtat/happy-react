@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import Navbar from "../components/Navbar";
 import Pagination from "../components/Pagination";
 import CustomersAPI from "../services/CustomersAPI";
 
@@ -50,8 +49,7 @@ const Customers = (props) => {
 
     return ( 
         <div>
-            <Navbar />
-            <h1 className="App-title">CUSTOMERS PAGE</h1>
+            <h1 className="App-title">Clients</h1>
             <p className="App-texte">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eum quas dolorem reprehenderit, quia ullam et quibusdam, maiores perspiciatis hic aut dolore atque earum ea doloremque? Explicabo unde eos eum consequuntur.</p>
         
             <div className="form-group">

@@ -3,12 +3,10 @@
 }
 
 .App-title {
-  color: red;
   font-size: 2rem;
 }
 
 .App-texte {
-  color: blue;
   font-size: 1.2rem;
 }
 
@@ -19,12 +17,6 @@
 
 .App-active-navlink {
   font-weight: bolder;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
 }
 
 .App-header {
@@ -44,11 +36,3 @@
   font-style: italic;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
