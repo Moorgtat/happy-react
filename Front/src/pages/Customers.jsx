@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Pagination from "../components/Pagination";
 import CustomersAPI from "../services/CustomersAPI";
 
@@ -48,8 +49,12 @@ const Customers = (props) => {
     const paginatedCustomers = Pagination.getData(filteredCustomers, currentPage, itemsPerPage);
 
     return ( 
-        <div>
-            <h1 className="App-title">Clients</h1>
+        <>
+            <div className="d-flex justify-content-between align-items-center py-3">
+                <h1 className="App-title">Clients</h1>
+                <Link to="/customers/new" className="btn btn-primary mr-3">Créer un client</Link>
+            </div>
+            
             <p className="App-texte">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eum quas dolorem reprehenderit, quia ullam et quibusdam, maiores perspiciatis hic aut dolore atque earum ea doloremque? Explicabo unde eos eum consequuntur.</p>
         
             <div className="form-group">
@@ -72,7 +77,7 @@ const Customers = (props) => {
                     { paginatedCustomers.map(
                         customer =>
                                     <tr key={customer.id}>
-                                        <td>{customer.firstName} {customer.lastName}</td>
+                                        <td>{customer.id} {customer.firstName} {customer.lastName}</td>
                                         <td>{customer.email}</td>
                                         <td>{customer.company}</td>
                                         <td>{customer.invoices.length}</td>
@@ -97,7 +102,7 @@ const Customers = (props) => {
                 onPageChange={handlePageChange} />
             )}
 
-        </div>
+        </>
      );
 }
  

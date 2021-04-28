@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route, withRouter } from 'react-router
 import Navbar from "./components/Navbar";
 import Home from './pages/Home';
 import Invoices from './pages/Invoices';
+import Customer from './pages/Customer';
 import Customers from './pages/Customers';
 import LoginPage from './pages/LoginPage';
 import AuthAPI from './services/AuthAPI';
@@ -31,8 +32,9 @@ return (
             path="/login"
             component={LoginPage}
           />
-          <PrivateRoute path="/customers" component={Customers} />
-          <PrivateRoute path="/invoices" component={Invoices} />
+          <PrivateRoute path="/customers/:id" component={Customer} />
+          <PrivateRoute exact path="/customers" component={Customers} />
+          <PrivateRoute exact path="/invoices" component={Invoices} />
         </Switch>   
       </div>
     </Router>

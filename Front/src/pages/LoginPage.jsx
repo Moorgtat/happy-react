@@ -1,6 +1,7 @@
 import AuthAPI from "../services/AuthAPI";
 import { useState, useContext } from 'react';
 import AuthContext from '../contexts/AuthContext';
+import Field from "../forms/Field";
 
 
 const LoginPage = ({history}) => {
@@ -38,40 +39,31 @@ const LoginPage = ({history}) => {
         <div>
             <h1 className="App-title">Connexion</h1>
             <p className="App-texte">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eum quas dolorem reprehenderit, quia ullam et quibusdam, maiores perspiciatis hic aut dolore atque earum ea doloremque? Explicabo unde eos eum consequuntur.</p>
+            
             <form onSubmit={handleSubmit}>
-            <div className="form-group"><label htmlFor="username">Adresse Email</label>
-                <input 
-                    value={credentials.username}
-                    onChange={handleChange}
-                    type="email" 
-                    placeholder="Entrez votre adresse email" 
-                    name="username" 
-                    id="username" 
-                    className={"form-control" + (error && " is-invalid")}
-                />
-               {error && <p className="invalid-feedback">
-                    {error}
-                </p>} 
-            </div>
 
-            <div className="form-group"><label htmlFor="password">Mot de passe</label>
-                <input
+            <Field  name="username" 
+                    label="Adresse email" 
+                    value={credentials.username} 
+                    type="email" 
+                    onChange={handleChange} 
+                    placeholder="Entrez votre email" 
+                    error={error}
+            />
+
+            <Field  name="password" 
+                    label="Mot de passe" 
                     value={credentials.password}
-                    onChange={handleChange}
                     type="password" 
+                    onChange={handleChange} 
                     placeholder="Entrez votre mot de passe" 
-                    name="password" 
-                    id="password" 
-                    className={"form-control" + (error && " is-invalid")}
-                />
-                {error && <p className="invalid-feedback">
-                    {error}
-                </p>} 
-            </div>
+                    error={error}
+            />
 
             <div className="form-group">
                 <button className="btn btn-success">Valider</button>
             </div>
+            
             </form>
 
         </div>
