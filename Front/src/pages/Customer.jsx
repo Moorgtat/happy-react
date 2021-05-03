@@ -2,6 +2,7 @@ import Field from "../forms/Field";
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import CustomersAPI from "../services/CustomersAPI";
+import { toast } from "react-toastify";
 
 const Customer = ({ match, history }) => {
     
@@ -28,7 +29,8 @@ const Customer = ({ match, history }) => {
             const { firstName, lastName, email, company } = await CustomersAPI.find(id);
             setCustomer({firstName, lastName, email, company});
         } catch (error) {
-                history.replace("/customers");
+            setCustomer({});
+            history.replace("/customers");
         }
     };
 
@@ -49,13 +51,16 @@ const Customer = ({ match, history }) => {
          try {
              if (editing) {
                 await CustomersAPI.update(id, customer);
+                toast.success("Utilisateur modifié!");
              } else {
                 await CustomersAPI.create(customer);
+                toast.success("Utilisateur créé!");
                 history.replace("/customers");
              }
             setErrors({});
-         } catch (response) {
-             const { violations } = response.data;
+         } catch (error) {
+             toast.error("Nop");
+             const { violations } = error.response.data;
              if (violations) {
                  const apiErrors = {};
                  violations.forEach(({ propertyPath, message }) => {

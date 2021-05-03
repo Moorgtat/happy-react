@@ -22,7 +22,6 @@ function setup() {
         const jwtData = jwtDecode(token);
         if (jwtData.exp * 1000 > new Date().getTime()) {
             axios.defaults.headers["Authorization"] = "Bearer " + token;
-            console.log("Connexion établie");
         } else {
             logout();  
         }

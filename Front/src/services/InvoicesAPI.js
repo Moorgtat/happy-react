@@ -5,6 +5,20 @@ function findAll() {
     .then(response => response.data['hydra:member']);
 };
 
+function find(id) {
+    return axios
+    .get("http://127.0.0.1:8000/api/invoices/" + id)
+    .then(response => response.data);
+};
+
+function create(invoice) {
+    return axios.post("http://127.0.0.1:8000/api/invoices", {...invoice, amount: Number(invoice.amount), customer: `/api/customers/${invoice.customer}`});
+}
+
+function update(id, invoice) {
+    return axios.put("http://127.0.0.1:8000/api/invoices/" + id, {...invoice, customer: `/api/customers/${invoice.customer}`});
+};
+
 function deleteInvoice(id) {
     return axios.delete("http://127.0.0.1:8000/api/invoices/" + id);
 };
@@ -12,5 +26,8 @@ function deleteInvoice(id) {
 // eslint-disable-next-line
 export default {
     findAll,
+    find,
+    create,
+    update,
     delete: deleteInvoice
 };

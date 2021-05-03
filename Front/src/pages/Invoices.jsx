@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
-import Pagination from "../components/Pagination";
-import InvoicesAPI from '../services/InvoicesAPI';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import Loader from '../components/Loader';
 import moment from 'moment';
+import InvoicesAPI from '../services/InvoicesAPI';
+import Pagination from "../components/Pagination";
 
 const Invoices = (props) => {
 
     const [invoices, setInvoices] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
+    const [loading, setLoading] = useState(true);
 
     const STATUS_LABELS = {
         PAID: "success",
@@ -25,8 +29,10 @@ const Invoices = (props) => {
         try {
             const data = await InvoicesAPI.findAll()
             setInvoices(data);
+            setLoading(false);
         } catch (error) {
-            console.log(error.response);
+            toast.error("Erreur lors du chargement des factures.");
+            setInvoices([]);
         }
     };
 
@@ -36,10 +42,12 @@ const Invoices = (props) => {
         const originalInvoices = [...invoices];
         setInvoices(invoices.filter(invoice => invoice.id !== id));
         try {
-            await InvoicesAPI.delete(id)
+            await InvoicesAPI.delete(id);
+            toast.success("La facture a bien été supprimée.");
         } catch (error) {
             setInvoices(originalInvoices);
-            console.log(error.response)};
+            toast.error("La facture n'a pas pu être supprimée.");
+            };
         };
 
 
@@ -65,14 +73,17 @@ const Invoices = (props) => {
 
     return ( 
         <div>
-            <h1 className="App-title">Factures</h1>
+            <div className="d-flex justify-content-between align-items-center py-3">
+                <h1 className="App-title">Factures</h1>
+                <Link to="/invoices/new" className="btn btn-primary mr-3">Créer une facture</Link>
+            </div>
             <p className="App-texte">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eum quas dolorem reprehenderit, quia ullam et quibusdam, maiores perspiciatis hic aut dolore atque earum ea doloremque? Explicabo unde eos eum consequuntur.</p>
         
             <div className="form-group">
                 <input type="text" onChange={handleSearch} value={search} className="form-control" placeholder="Rechercher..." />
             </div>
 
-            <table className="table table-hover">
+            {!loading && <table className="table table-hover">
                 <thead>
                     <tr>
                         <th>Chrono</th>
@@ -98,23 +109,25 @@ const Invoices = (props) => {
                                         </td>
                                         <td>{invoice.amount}</td>
                                         <td>
-                                        <button
-                                            onClick={() => handleDelete(invoice.id)}
+                                        <Link
+                                            to={"/invoices/" + invoice.id}
                                             className="btn btn-warning m-1">
                                                     Editer
-                                            </button>
-                                            <button
+                                        </Link>
+                                        <button
                                             onClick={() => handleDelete(invoice.id)}
                                             className="btn btn-danger m-1">
                                                     Supprimer
-                                            </button>
+                                        </button>
                                         </td>
                                     </tr>
                                     )
                         }
                     
                 </tbody>
-            </table>
+            </table>}
+
+            <Loader />
 
             {itemsPerPage < filteredInvoices.length && (
                 <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage} length={filteredInvoices.length} 

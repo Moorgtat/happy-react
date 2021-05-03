@@ -2,7 +2,7 @@ import AuthAPI from "../services/AuthAPI";
 import { useState, useContext } from 'react';
 import AuthContext from '../contexts/AuthContext';
 import Field from "../forms/Field";
-
+import { toast } from "react-toastify";
 
 const LoginPage = ({history}) => {
   
@@ -18,7 +18,6 @@ const LoginPage = ({history}) => {
     const handleChange = (event) => {
         const value = event.currentTarget.value;
         const name = event.currentTarget.name;
-
         setCredentials({...credentials, [name]: value})
     };
 
@@ -28,10 +27,11 @@ const LoginPage = ({history}) => {
             await AuthAPI.authenticate(credentials);
             setError("");
             setIsAuthenticated(true);
+            toast.success("Vous êtes connecté !!");
             history.replace("/customers");
             } catch (error) {
-            console.log(error.response);
-            setError("Les informations fournies sont incorrectes.")
+            setError("Les informations fournies sont incorrectes.");
+            setCredentials({});
         }
     }
 

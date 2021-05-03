@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import Loader from '../components/Loader';
 import Pagination from "../components/Pagination";
 import CustomersAPI from "../services/CustomersAPI";
 
@@ -8,13 +10,16 @@ const Customers = (props) => {
     const [customers, setCustomers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState("");
+    const [loading, setLoading] = useState(true);
 
     const fetchCustomers = async () => {
         try {
             const data = await CustomersAPI.findAll()
             setCustomers(data);
+            setLoading(false);
         } catch (error) {
-            console.log(error.response);
+            toast.error("Erreur lors du chargement de utilisateurs.");
+            setCustomers([]);
         }
     };
 
@@ -24,10 +29,12 @@ const Customers = (props) => {
         const originalCustomers = [...customers];
         setCustomers(customers.filter(customer => customer.id !== id));
         try {
-            await CustomersAPI.delete(id)
+            await CustomersAPI.delete(id);
+            toast.success("Utilisateur supprimé");
         } catch (error) {
+            toast.error("Erruer lors de la suppression");
             setCustomers(originalCustomers);
-            console.log(error.response)};
+            };
         };
 
 
@@ -61,7 +68,7 @@ const Customers = (props) => {
                 <input type="text" onChange={handleSearch} value={search} className="form-control" placeholder="Rechercher..." />
             </div>
 
-            <table className="table table-hover">
+            {!loading && <table className="table table-hover">
                 <thead>
                     <tr>
                         <th>Client</th>
@@ -83,6 +90,11 @@ const Customers = (props) => {
                                         <td>{customer.invoices.length}</td>
                                         <td>{customer.totalAmount.toLocaleString()} $</td>
                                         <td>
+                                            <Link
+                                                to={"/customers/" + customer.id}
+                                                className="btn btn-warning m-1">
+                                                        Editer
+                                            </Link>
                                             <button
                                             onClick={() => handleDelete(customer.id)}
                                             disabled={customer.invoices.length > 0} 
@@ -95,8 +107,10 @@ const Customers = (props) => {
                         }
                     
                 </tbody>
-            </table>
-
+            </table>}
+            
+            <Loader />
+            
             {itemsPerPage < filteredCustomers.length && (
                 <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage} length={filteredCustomers.length} 
                 onPageChange={handlePageChange} />
