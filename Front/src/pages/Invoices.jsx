@@ -127,7 +127,7 @@ const Invoices = (props) => {
                 </tbody>
             </table>}
 
-            <Loader />
+            {loading && <Loader />}
 
             {itemsPerPage < filteredInvoices.length && (
                 <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage} length={filteredInvoices.length} 

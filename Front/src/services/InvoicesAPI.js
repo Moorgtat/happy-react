@@ -1,26 +1,27 @@
 import axios from "axios";
+import {API_URL} from '../Config';
 
 function findAll() {
-    return axios.get("http://127.0.0.1:8000/api/invoices")
+    return axios.get(API_URL + "invoices")
     .then(response => response.data['hydra:member']);
 };
 
 function find(id) {
     return axios
-    .get("http://127.0.0.1:8000/api/invoices/" + id)
+    .get(API_URL + "invoices/" + id)
     .then(response => response.data);
 };
 
 function create(invoice) {
-    return axios.post("http://127.0.0.1:8000/api/invoices", {...invoice, amount: Number(invoice.amount), customer: `/api/customers/${invoice.customer}`});
+    return axios.post(API_URL + "invoices", {...invoice, amount: Number(invoice.amount), customer: `/api/customers/${invoice.customer}`});
 }
 
 function update(id, invoice) {
-    return axios.put("http://127.0.0.1:8000/api/invoices/" + id, {...invoice, customer: `/api/customers/${invoice.customer}`});
+    return axios.put(API_URL + "invoices/" + id, {...invoice, customer: `/api/customers/${invoice.customer}`});
 };
 
 function deleteInvoice(id) {
-    return axios.delete("http://127.0.0.1:8000/api/invoices/" + id);
+    return axios.delete(API_URL + "invoices/" + id);
 };
 
 // eslint-disable-next-line
