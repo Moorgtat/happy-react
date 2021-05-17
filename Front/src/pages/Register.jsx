@@ -36,6 +36,7 @@ const Register = ({ history }) => {
             return
         }
         try {
+            console.log(user);
             await axios.post("http://127.0.0.1:8000/api/users", user);
             setErrors({});
             toast.success("Vous êtes bien enregistré ! ");

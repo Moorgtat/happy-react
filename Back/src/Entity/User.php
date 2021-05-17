@@ -16,7 +16,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity("email", message="Cet email est déjà pris")
  * @ApiResource(
- *      normalizationContext={"groups"={"users_read"}}
+ *      normalizationContext={"groups"={"users_read"}},
+ *      itemOperations={"get"}
  * )
  */
 class User implements UserInterface
