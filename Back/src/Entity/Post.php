@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PostRepository;
+use App\Controller\PostPublishController;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -22,6 +23,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     }
  * },
  * itemOperations={
+ *  "publish"={
+ *      "method" = "POST",
+ *      "path" = "/posts/{id}/publish",
+ *      "controller" = PostPublishController::class,
+ *      "openapi_context"={
+ *          "summary"= "Permets de publier un article online.",
+ *          "requestBody"= {
+ *              "content"= {
+ *                  "application/json"= {
+ *                      "schema" = {
+ *                          "type"= "object",
+ *                          "required"= {}
+ *                          }
+ *                      }
+ *                  }
+ *              }
+ *          }
+ *      },
  *  "put"={
  *      "denormalization_context"={
  *      "groups"={"put_post"}
@@ -81,6 +100,12 @@ class Post
      * @Groups({"post_collection", "post_item_category", "put_post"})
      */
     private $category;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default": "0"})
+     * @Groups({"post_collection"})
+     */
+    private $online = false;
 
     public function __construct()
     {
@@ -161,6 +186,18 @@ class Post
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getOnline(): ?bool
+    {
+        return $this->online;
+    }
+
+    public function setOnline(bool $online): self
+    {
+        $this->online = $online;
 
         return $this;
     }
