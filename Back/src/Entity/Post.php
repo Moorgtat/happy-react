@@ -12,13 +12,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass=PostRepository::class)
 * @ApiResource (
  * normalizationContext={
- *      "groups"={"post_collection"}
+ *      "groups"={"read:collection"},
+ *      "openapi_definition_name"= "Collection"
  *  },
  * collectionOperations={
  *  "get",
  *  "post"={
  *      "denormalization_context"={
- *      "groups"={"put_post"}
+ *      "groups"={"write:post"}
  *      }
  *     }
  * },
@@ -43,13 +44,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *      },
  *  "put"={
  *      "denormalization_context"={
- *      "groups"={"put_post"}
+ *      "groups"={"write:post"}
  *      }
  *     },
  *  "delete",
  *  "get"={
  *      "normalization_context"={
- *      "groups"={"post_collection","post_item", "post_item_category"}
+ *      "groups"={"read:collection","post_item", "post_item_category"},
+ *      "openapi_definition_name"= "Detail"
  *      }
  *     }
  *  }
@@ -67,19 +69,19 @@ class Post
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"post_collection", "put_post"})
+     * @Groups({"read:collection", "write:post"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"post_collection", "put_post"})
+     * @Groups({"read:collection", "write:post"})
      */
     private $slug;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"post_item", "put_post"})
+     * @Groups({"post_item", "write:post"})
      */
     private $content;
 
@@ -97,13 +99,13 @@ class Post
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="posts")
-     * @Groups({"post_collection", "post_item_category", "put_post"})
+     * @Groups({"read:collection", "post_item_category", "write:post"})
      */
     private $category;
 
     /**
      * @ORM\Column(type="boolean", options={"default": "0"})
-     * @Groups({"post_collection"})
+     * @Groups({"read:collection"})
      */
     private $online = false;
 
