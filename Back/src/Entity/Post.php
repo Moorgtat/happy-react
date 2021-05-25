@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PostRepository;
+use App\Controller\PostCountController;
 use App\Controller\PostPublishController;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -16,6 +17,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *      "openapi_definition_name"= "Collection"
  *  },
  * collectionOperations={
+ *  "count"={
+ *      "method" = "GET",
+ *      "path" = "/posts/count",
+ *      "controller" = PostCountController::class,
+ *      "read" = false,
+ *      "openapi_context"={
+ *          "summary"= "Renvoit le nombre de Posts.",
+ *          "parameters" = {}
+ *      }
+ *  },
  *  "get",
  *  "post"={
  *      "denormalization_context"={
