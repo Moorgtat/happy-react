@@ -11,7 +11,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
-* @ApiResource (
+ * @ApiResource (
  * normalizationContext={
  *      "groups"={"read:collection"},
  *      "openapi_definition_name"= "Collection"
